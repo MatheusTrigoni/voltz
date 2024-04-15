@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'home.dart';
 
 void main() => runApp(const MaterialApp(
   home: VoltzHome()
@@ -104,22 +105,30 @@ class VoltzHome extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(156, 10, 156, 10),
-                  margin: const EdgeInsets.fromLTRB(0, 4, 0, 6),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xFF2F88CC)
-                  ),
-                  child: const Text(
-                    'Entrar',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Raleway',
-                        fontWeight: FontWeight.bold
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Home())
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(156, 10, 156, 10),
+                    margin: const EdgeInsets.fromLTRB(0, 4, 0, 6),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: const Color(0xFF2F88CC)
                     ),
-                    textAlign: TextAlign.center,
+                    child: const Text(
+                      'Entrar',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Raleway',
+                          fontWeight: FontWeight.bold
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ],
