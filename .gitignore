@@ -41,8 +41,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# Inserindo essas pastas porque iniciei o projeto assim por padrão e acho que não são necessárias
-/linux
-/macos
-/web

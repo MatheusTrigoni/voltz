@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "243317475960",
+    "project_id": "voltz-fa7a0",
+    "storage_bucket": "voltz-fa7a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243317475960:android:0fde7357b3ccd91e16bb8d",
+        "android_client_info": {
+          "package_name": "voltzunasp.com.voltz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArRrFRHbZ8IK20Kt3lRMrykbR20b31x0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
