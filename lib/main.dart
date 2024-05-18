@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:voltz/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -92,7 +94,6 @@ class _VoltzMainState extends State<VoltzMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: VoltzMain.brancoAcizentado,
-      appBar: null,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -191,7 +192,7 @@ class _VoltzMainState extends State<VoltzMain> {
                 ),
               ),
             ),
-            InkWell(
+            GestureDetector(
               onTap: () {
                 criarConta(controladorEmail.text, controladorSenha.text).then((_) {
                   if (usuarioExiste) {
@@ -251,7 +252,7 @@ class _VoltzMainState extends State<VoltzMain> {
                 ),
               ),
             ),
-            InkWell(
+            GestureDetector(
               onTap: () {
                 efetuarLogin(controladorEmail.text, controladorSenha.text).then((_) {
                   if (usuarioExiste) {

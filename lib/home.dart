@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'carteira.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -93,7 +95,7 @@ class Home extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      print('BOTÃO CARTEIRA PRESSIONADO');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Carteira()));
                     },
                     icon: const ImageIcon(
                       AssetImage('images/carteira.png')
