@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:voltz/carregar.dart';
 import 'carteira.dart';
 
 class Home extends StatelessWidget {
@@ -117,7 +117,7 @@ class Home extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () {
-                        print('BOTÃO CARTEIRA PRESSIONADO');
+                        print('BOTÃO PAGAR PRESSIONADO');
                       },
                       icon: const ImageIcon(
                           AssetImage('images/qr-code.png')
@@ -139,7 +139,7 @@ class Home extends StatelessWidget {
                 children: [
                   IconButton(
                       onPressed: () {
-                        print('BOTÃO CARTEIRA PRESSIONADO');
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Carregar()));
                       },
                       icon: const ImageIcon(
                           AssetImage('images/bateria.png')

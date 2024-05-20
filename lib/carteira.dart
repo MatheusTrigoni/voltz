@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'components/header.dart';
 
 class Carteira extends StatelessWidget {
   const Carteira({super.key});
@@ -18,38 +17,7 @@ class Carteira extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.fromLTRB(32, 62, 0, 0),
-                  child: const Text(
-                    'Carteira',
-                    style: TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(32, 56, 32, 0),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Image.asset('images/fechar.png'),
-                    //iconSize: 48,
-                    color: Colors.white,
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
-                      padding: MaterialStatePropertyAll(EdgeInsets.all(17.9))
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            const Header(titulo: 'Carteira'),
             Container(
               margin: const EdgeInsets.fromLTRB(32, 65, 0, 0),
               child: const Text(
