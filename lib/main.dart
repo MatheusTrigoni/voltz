@@ -7,12 +7,8 @@ import 'home.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
-  runApp(MaterialApp(
-    home: VoltzMain()
-  ));
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: VoltzMain()));
 }
 
 class VoltzMain extends StatefulWidget {
@@ -39,11 +35,19 @@ class _VoltzMainState extends State<VoltzMain> {
       return;
     }
 
+    final RegExp verificacaoEmail = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+        caseSensitive: false, multiLine: false);
+
+    if (verificacaoEmail.hasMatch(email) == false) {
+      usuarioExiste = false;
+      return;
+    }
+
     try {
       QuerySnapshot consulta = await FirebaseFirestore.instance
-      .collection('usuarios')
-      .where('email', isEqualTo: email)
-      .get();
+          .collection('usuarios')
+          .where('email', isEqualTo: email)
+          .get();
 
       if (consulta.size == 0) {
         await FirebaseFirestore.instance.collection('usuarios').add({
@@ -71,10 +75,10 @@ class _VoltzMainState extends State<VoltzMain> {
 
     try {
       QuerySnapshot consulta = await FirebaseFirestore.instance
-      .collection('usuarios')
-      .where('email', isEqualTo: email)
-      .where('senha', isEqualTo: senha)
-      .get();
+          .collection('usuarios')
+          .where('email', isEqualTo: email)
+          .where('senha', isEqualTo: senha)
+          .get();
 
       if (consulta.size == 0) {
         usuarioExiste = false;
@@ -99,46 +103,40 @@ class _VoltzMainState extends State<VoltzMain> {
               height: MediaQuery.of(context).size.height * 0.65,
               decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(
-                      'images/fundo.png',
-                    ),
-                    fit: BoxFit.cover,
-                  )
-              ),
+                image: AssetImage(
+                  'images/fundo.png',
+                ),
+                fit: BoxFit.cover,
+              )),
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(20, 6, 20, 6),
               child: TextField(
                 controller: controladorEmail,
                 style: const TextStyle(
-                  color: VoltzMain.azulVoltz,
-                  fontFamily: 'Raleway',
-                  fontSize: 20,
-                  fontWeight: FontWeight.normal
-                ),
+                    color: VoltzMain.azulVoltz,
+                    fontFamily: 'Raleway',
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal),
                 autocorrect: false,
                 cursorColor: VoltzMain.azulVoltz,
                 decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: VoltzMain.azulVoltz,
-                      width: 2
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: VoltzMain.azulVoltz, width: 2),
                     ),
-                  ),
-                  contentPadding: EdgeInsets.all(13.5),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: VoltzMain.cinzaVoltz,
+                    contentPadding: EdgeInsets.all(13.5),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: VoltzMain.cinzaVoltz,
+                      ),
                     ),
-                  ),
-                  hintText: 'Email',
-                  hintStyle: TextStyle(
-                    color: VoltzMain.cinzaVoltz,
-                    fontFamily: 'Raleway',
-                    fontSize: 20,
-                    fontWeight: FontWeight.normal
-                  )
-                ),
+                    hintText: 'Email',
+                    hintStyle: TextStyle(
+                        color: VoltzMain.cinzaVoltz,
+                        fontFamily: 'Raleway',
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal)),
               ),
             ),
             Container(
@@ -149,18 +147,15 @@ class _VoltzMainState extends State<VoltzMain> {
                     color: VoltzMain.azulVoltz,
                     fontFamily: 'Raleway',
                     fontSize: 20,
-                    fontWeight: FontWeight.normal
-                ),
+                    fontWeight: FontWeight.normal),
                 cursorColor: VoltzMain.azulVoltz,
                 autocorrect: false,
                 enableSuggestions: false,
                 obscureText: true,
                 decoration: const InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: VoltzMain.azulVoltz,
-                        width: 2
-                    ),
+                    borderSide:
+                        BorderSide(color: VoltzMain.azulVoltz, width: 2),
                   ),
                   contentPadding: EdgeInsets.all(13.5),
                   enabledBorder: OutlineInputBorder(
@@ -173,8 +168,7 @@ class _VoltzMainState extends State<VoltzMain> {
                       color: VoltzMain.cinzaVoltz,
                       fontFamily: 'Raleway',
                       fontSize: 20,
-                      fontWeight: FontWeight.normal
-                  ),
+                      fontWeight: FontWeight.normal),
                 ),
               ),
             ),
@@ -192,39 +186,38 @@ class _VoltzMainState extends State<VoltzMain> {
             ),
             GestureDetector(
               onTap: () {
-                criarConta(controladorEmail.text, controladorSenha.text).then((_) {
+                criarConta(controladorEmail.text, controladorSenha.text)
+                    .then((_) {
                   if (usuarioExiste) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Home()));
                   } else {
                     showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        backgroundColor: VoltzMain.brancoAcizentado,
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text(
-                              'Fechar',
-                              style: TextStyle(
-                                color: VoltzMain.azulVoltz,
-                                fontFamily: 'Raleway',
-                                fontWeight: FontWeight.bold
-                              ),
-                            )
-                          )
-                        ],
-                        title: const Text(
-                          'Erro ao criar conta',
-                          style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)
-                        ),
-                        content: const Text(
-                          'Você tentou criar uma conta com um email já registrado ou um ou mais campos não foram preenchidos.',
-                          style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.normal)
-                        )
-                      )
-                    );
+                        context: context,
+                        builder: (context) => AlertDialog(
+                            backgroundColor: VoltzMain.brancoAcizentado,
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'Fechar',
+                                    style: TextStyle(
+                                        color: VoltzMain.azulVoltz,
+                                        fontFamily: 'Raleway',
+                                        fontWeight: FontWeight.bold),
+                                  ))
+                            ],
+                            title: const Text('Erro ao criar conta',
+                                style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.bold)),
+                            content: const Text(
+                                'Você tentou criar uma conta com um email já registrado, um ou mais campos não foram preenchidos, ou o email é inválido.',
+                                style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.normal))));
                   }
                 });
               },
@@ -232,59 +225,53 @@ class _VoltzMainState extends State<VoltzMain> {
                 padding: const EdgeInsets.fromLTRB(106, 10, 106, 10),
                 margin: const EdgeInsets.fromLTRB(0, 4, 0, 6),
                 decoration: BoxDecoration(
-                    border: Border.all(
-                        color: VoltzMain.azulVoltz,
-                        width: 2
-                    ),
-                    borderRadius: BorderRadius.circular(4)
-                ),
+                    border: Border.all(color: VoltzMain.azulVoltz, width: 2),
+                    borderRadius: BorderRadius.circular(4)),
                 child: const Text(
                   'Criar uma conta',
                   style: TextStyle(
                       color: VoltzMain.azulVoltz,
                       fontSize: 20,
                       fontFamily: 'Raleway',
-                      fontWeight: FontWeight.bold
-                  ),
+                      fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
             GestureDetector(
               onTap: () {
-                efetuarLogin(controladorEmail.text, controladorSenha.text).then((_) {
+                efetuarLogin(controladorEmail.text, controladorSenha.text)
+                    .then((_) {
                   if (usuarioExiste) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Home()));
                   } else {
                     showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        backgroundColor: VoltzMain.brancoAcizentado,
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text(
-                              'Fechar',
-                              style: TextStyle(
-                                color: VoltzMain.azulVoltz,
-                                fontFamily: 'Raleway',
-                                fontWeight: FontWeight.bold
-                              ),
-                            )
-                          )
-                        ],
-                        title: const Text(
-                          'Erro ao efetuar login',
-                          style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.bold)
-                        ),
-                        content: const Text(
-                          'O email e(ou) a senha estão errados, o usuário não existe ou um ou mais campos não foram preenchidos.',
-                          style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.normal)
-                        )
-                      )
-                    );
+                        context: context,
+                        builder: (context) => AlertDialog(
+                            backgroundColor: VoltzMain.brancoAcizentado,
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'Fechar',
+                                    style: TextStyle(
+                                        color: VoltzMain.azulVoltz,
+                                        fontFamily: 'Raleway',
+                                        fontWeight: FontWeight.bold),
+                                  ))
+                            ],
+                            title: const Text('Erro ao efetuar login',
+                                style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.bold)),
+                            content: const Text(
+                                'O email e(ou) a senha estão errados, o usuário não existe ou um ou mais campos não foram preenchidos.',
+                                style: TextStyle(
+                                    fontFamily: 'Raleway',
+                                    fontWeight: FontWeight.normal))));
                   }
                 });
               },
@@ -293,16 +280,14 @@ class _VoltzMainState extends State<VoltzMain> {
                 margin: const EdgeInsets.fromLTRB(0, 4, 0, 6),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: VoltzMain.azulVoltz
-                ),
+                    color: VoltzMain.azulVoltz),
                 child: const Text(
                   'Entrar',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontFamily: 'Raleway',
-                      fontWeight: FontWeight.bold
-                  ),
+                      fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
