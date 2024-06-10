@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:voltz/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,13 +7,13 @@ import 'home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: VoltzMain()));
+  await dotenv.load(fileName: '.env');
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false, home: VoltzMain()));
 }
 
 class VoltzMain extends StatefulWidget {
-  VoltzMain({super.key});
+  const VoltzMain({super.key});
 
   static const Color cinzaVoltz = Color(0xFFA4A4A4);
   static const Color azulVoltz = Color(0xFF2F88CC);
@@ -23,19 +24,19 @@ class VoltzMain extends StatefulWidget {
 }
 
 class _VoltzMainState extends State<VoltzMain> {
-  TextEditingController controladorEmail = TextEditingController();
-  TextEditingController controladorSenha = TextEditingController();
+  final TextEditingController _controladorEmail = TextEditingController();
+  final TextEditingController _controladorSenha = TextEditingController();
 
   bool usuarioExiste = false;
 
-  Future<void> criarConta(String email, String senha) async {
+  Future<void> _criarConta(String email, String senha) async {
     if (email == '' || senha == '') {
       usuarioExiste = false;
       print('Falha ao criar conta, um ou mais campos estão vazios');
       return;
     }
 
-    final RegExp verificacaoEmail = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+    final RegExp verificacaoEmail = RegExp(r'^[\w-]+@([\w-]+\.)+[\w-]{2,4}$',
         caseSensitive: false, multiLine: false);
 
     if (verificacaoEmail.hasMatch(email) == false) {
@@ -66,7 +67,7 @@ class _VoltzMainState extends State<VoltzMain> {
     }
   }
 
-  Future<void> efetuarLogin(String email, String senha) async {
+  Future<void> _efetuarLogin(String email, String senha) async {
     if (email == '' || senha == '') {
       usuarioExiste = false;
       print('Falha ao efetuar login, um ou mais campos estão vazios');
@@ -112,18 +113,21 @@ class _VoltzMainState extends State<VoltzMain> {
             Container(
               margin: const EdgeInsets.fromLTRB(20, 6, 20, 6),
               child: TextField(
-                controller: controladorEmail,
+                controller: _controladorEmail,
                 style: const TextStyle(
                     color: VoltzMain.azulVoltz,
                     fontFamily: 'Raleway',
                     fontSize: 20,
-                    fontWeight: FontWeight.normal),
+                    fontWeight: FontWeight.normal
+                ),
                 autocorrect: false,
                 cursorColor: VoltzMain.azulVoltz,
                 decoration: const InputDecoration(
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: VoltzMain.azulVoltz, width: 2),
+                      borderSide: BorderSide(
+                        color: VoltzMain.azulVoltz,
+                        width: 2
+                      ),
                     ),
                     contentPadding: EdgeInsets.all(13.5),
                     enabledBorder: OutlineInputBorder(
@@ -136,13 +140,15 @@ class _VoltzMainState extends State<VoltzMain> {
                         color: VoltzMain.cinzaVoltz,
                         fontFamily: 'Raleway',
                         fontSize: 20,
-                        fontWeight: FontWeight.normal)),
+                        fontWeight: FontWeight.normal
+                    )
+                ),
               ),
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(20, 1, 20, 2),
               child: TextField(
-                controller: controladorSenha,
+                controller: _controladorSenha,
                 style: const TextStyle(
                     color: VoltzMain.azulVoltz,
                     fontFamily: 'Raleway',
@@ -186,11 +192,11 @@ class _VoltzMainState extends State<VoltzMain> {
             ),
             GestureDetector(
               onTap: () {
-                criarConta(controladorEmail.text, controladorSenha.text)
+                _criarConta(_controladorEmail.text, _controladorSenha.text)
                     .then((_) {
                   if (usuarioExiste) {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Home()));
+                        MaterialPageRoute(builder: (context) => Home(email: _controladorEmail.text)));
                   } else {
                     showDialog(
                         context: context,
@@ -240,11 +246,11 @@ class _VoltzMainState extends State<VoltzMain> {
             ),
             GestureDetector(
               onTap: () {
-                efetuarLogin(controladorEmail.text, controladorSenha.text)
+                _efetuarLogin(_controladorEmail.text, _controladorSenha.text)
                     .then((_) {
                   if (usuarioExiste) {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const Home()));
+                        MaterialPageRoute(builder: (context) => Home(email: _controladorEmail.text,)));
                   } else {
                     showDialog(
                         context: context,

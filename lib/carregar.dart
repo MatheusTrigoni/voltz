@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:voltz/components/header.dart';
-import 'package:voltz/components/navoption.dart';
 
 class Carregar extends StatefulWidget {
   const Carregar({super.key});

@@ -1,12 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:voltz/carregar.dart';
-import 'carteira.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:voltz/components/botao_bottom_navigation_bar.dart';
+import 'package:voltz/perfil.dart';
+import './models/locais.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class Home extends StatefulWidget {
+  final String email;
+
+  const Home({super.key, required this.email});
 
   static const Color cinzaEscuro = Color(0xFF2F2F2F);
   static const Color brancoAcizentado = Color(0xFFEAEAEA);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  late GoogleMapController mapController;
+  final TextEditingController _searchController = TextEditingController();
+  final Set<Marker> _markers = <Marker>{};
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _carregarLocais() {
+    setState(() {
+      for (var local in locais) {
+        _markers.add(
+            Marker(
+                markerId: MarkerId(local.nome),
+                position: local.localizacao,
+                infoWindow: InfoWindow(title: local.nome)
+            )
+        );
+      }
+    });
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+    _carregarLocais();
+  }
+
+  void _moverCamera(String? lat, String? long) {
+    try {
+      if (lat != null && long != null) {
+        double latDouble = double.parse(lat);
+        double longDouble = double.parse(long);
+        LatLng latLng = LatLng(latDouble, longDouble);
+
+        mapController.animateCamera(CameraUpdate.newLatLng(latLng));
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,65 +72,68 @@ class Home extends StatelessWidget {
             image: AssetImage('images/fundo-app-bar.png'),
             fit: BoxFit.cover,
           ),
-          elevation: 0,
+          elevation: 10,
           automaticallyImplyLeading: false,
           actions: [
-            IconButton(
-                onPressed: () {
-                  print('BOTÃO SINO PRESSIONADO');
-                },
-                iconSize: 48,
-                color: Colors.white,
-                icon: const ImageIcon(
-                  AssetImage('images/sino.png')
-                )
-            ),
-            Container( // Deveria acrescentar um Container no botão anterior?
-              margin: const EdgeInsets.fromLTRB(4, 0, 32, 0),
-              child: IconButton(
-                  onPressed: () {
-                    print('BOTÃO USUÁRIO PRESSIONADO');
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 0, 2, 0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.66,
+                child: GooglePlaceAutoCompleteTextField(
+                  textEditingController: _searchController,
+                  googleAPIKey: dotenv.env['GOOGLE_MAPS_API_KEY']!,
+                  countries: const ['br'],
+                  itemClick: (sugestao) {
+                    _moverCamera(sugestao.lat, sugestao.lng);
                   },
-                  color: Colors.black,
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.white),
-                    padding: MaterialStatePropertyAll(EdgeInsets.zero)
+                  boxDecoration: const BoxDecoration(
+                    color: Colors.transparent
                   ),
-                  iconSize: 48,
-                  icon: const ImageIcon(
-                      AssetImage('images/user.png')
-                  )
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Raleway',
+                    fontSize: 16,
+                    fontWeight: FontWeight.normal
+                  ),
+                  inputDecoration: InputDecoration(
+                    filled: true,
+                    fillColor: Home.cinzaEscuro,
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                        width: 2
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(24)),
+                    ),
+                    prefixIcon: const Icon(Icons.search, color: Home.brancoAcizentado),
+                    hintText: 'Endereço, Shopping...',
+                    hintStyle: const TextStyle(
+                      fontFamily: 'Raleway',
+                      fontSize: 16,
+                      color: Color(0xFF898989),
+                      fontWeight: FontWeight.normal
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24)
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
         ),
-        body: Container(
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/mapa-temp.png'),
-              fit: BoxFit.cover
-            )
-          ),
-          child: Container(
-            alignment: Alignment.topCenter,
-            margin: const EdgeInsets.fromLTRB(20, 32, 20, 0),
-            child: TextField(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: cinzaEscuro,
-                prefixIcon: const Icon(Icons.search, color: brancoAcizentado),
-                hintText: 'Endereço, Shopping...',
-                hintStyle: const TextStyle(
-                  fontFamily: 'Raleway',
-                  fontSize: 16,
-                  color: Color(0xFF898989),
-                  fontWeight: FontWeight.normal
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24)
-                ),
+        body: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: const CameraPosition(
+                target: LatLng(-23.6665881, -46.7835859),
+                zoom: 13
               ),
+              markers: _markers,
             ),
           ),
         ),
@@ -85,71 +141,28 @@ class Home extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(0, 23, 0, 0),
           height: MediaQuery.of(context).size.height * 0.122,
           decoration: const BoxDecoration(
-            color: cinzaEscuro,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))
+            color: Home.cinzaEscuro,
+            //borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              const BotaoBottomNavigationBar(titulo: 'Carteira', imagem: 'images/carteira.png'),
+              const BotaoBottomNavigationBar(titulo: 'Pagar', imagem: 'images/qr-code.png'),
+              const BotaoBottomNavigationBar(titulo: 'Carregar', imagem: 'images/bateria.png'),
               Column(
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const Carteira()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Perfil(email: widget.email,)));
                     },
-                    icon: const ImageIcon(
-                      AssetImage('images/carteira.png')
-                    ),
-                    color: brancoAcizentado,
+                    icon: const Icon(Icons.person),
+                    color: Home.brancoAcizentado,
                   ),
                   const Text(
-                    'Carteira',
+                    'Perfil',
                     style: TextStyle(
-                      color: brancoAcizentado,
-                      fontFamily: 'Raleway',
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal
-                    ),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        print('BOTÃO PAGAR PRESSIONADO');
-                      },
-                      icon: const ImageIcon(
-                          AssetImage('images/qr-code.png')
-                      ),
-                      color: brancoAcizentado
-                  ),
-                  const Text(
-                    'Pagar',
-                    style: TextStyle(
-                        color: brancoAcizentado,
-                        fontFamily: 'Raleway',
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal
-                    ),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const Carregar()));
-                      },
-                      icon: const ImageIcon(
-                          AssetImage('images/bateria.png')
-                      ),
-                      color: brancoAcizentado
-                  ),
-                  const Text(
-                    'Carregar',
-                    style: TextStyle(
-                        color: brancoAcizentado,
+                        color: Home.brancoAcizentado,
                         fontFamily: 'Raleway',
                         fontSize: 16,
                         fontWeight: FontWeight.normal

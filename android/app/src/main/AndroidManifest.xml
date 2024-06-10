@@ -3,6 +3,9 @@
         android:label="voltz"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCjADsIP4qNiklosfj8oA9m7zohVFXnDBU"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

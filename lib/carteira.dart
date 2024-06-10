@@ -10,6 +10,8 @@ class Carteira extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double largura = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: cinzaEscuro,
       body: SizedBox(
@@ -19,7 +21,7 @@ class Carteira extends StatelessWidget {
           children: [
             const Header(titulo: 'Carteira'),
             Container(
-              margin: const EdgeInsets.fromLTRB(32, 65, 0, 0),
+              margin: EdgeInsets.fromLTRB(largura * 0.078, 65, 0, 0),
               child: const Text(
                 'Saldo Voltz',
                 style: TextStyle(
@@ -33,7 +35,7 @@ class Carteira extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  margin: const EdgeInsets.fromLTRB(32, 20, 0, 0),
+                  margin: EdgeInsets.fromLTRB(largura * 0.078, 20, 0, 0),
                   padding: const EdgeInsets.fromLTRB(39, 30, 39, 29),
                   decoration: const BoxDecoration(
                     color: pretoVoltz,
@@ -86,7 +88,7 @@ class Carteira extends StatelessWidget {
               ],
             ),
             Container(
-              margin: const EdgeInsets.fromLTRB(32, 94, 0, 0),
+              margin: EdgeInsets.fromLTRB(largura * 0.078, 94, 0, 0),
               child: const Text(
                 'Meus Cartões',
                 style: TextStyle(

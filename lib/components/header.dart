@@ -7,11 +7,13 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double largura = MediaQuery.of(context).size.width;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          margin: const EdgeInsets.fromLTRB(32, 62, 0, 0),
+          margin: EdgeInsets.fromLTRB(largura * 0.078, 62, 0, 0),
           child: Text(
             titulo,
             style: const TextStyle(
@@ -23,7 +25,7 @@ class Header extends StatelessWidget {
           ),
         ),
         Container(
-          margin: const EdgeInsets.fromLTRB(32, 56, 32, 0),
+          margin: EdgeInsets.fromLTRB(0, 56, largura * 0.078, 0),
           child: IconButton(
             onPressed: () {
               Navigator.pop(context);
