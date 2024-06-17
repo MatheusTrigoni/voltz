@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:voltz/carregar.dart';
 import 'package:voltz/carteira.dart';
 import 'package:voltz/pagar.dart';
+import 'package:voltz/perfil.dart';
 
 class BotaoBottomNavigationBar extends StatelessWidget {
   final String titulo;
   final String imagem;
+  final String email;
 
   const BotaoBottomNavigationBar({
     super.key,
     required this.titulo,
     required this.imagem,
+    this.email = ''
   });
 
   @override
@@ -29,6 +32,8 @@ class BotaoBottomNavigationBar extends StatelessWidget {
               case 'Carregar':
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const Carregar()));
                 break;
+              case 'Perfil':
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => Perfil(email: email)));
             }
           },
           icon: ImageIcon(

@@ -3,7 +3,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:voltz/components/botao_bottom_navigation_bar.dart';
-import 'package:voltz/perfil.dart';
 import './models/locais.dart';
 
 class Home extends StatefulWidget {
@@ -47,14 +46,14 @@ class _HomeState extends State<Home> {
     _carregarLocais();
   }
 
-  void _moverCamera(String? lat, String? long) {
+  Future<void> _moverCamera(String? lat, String? long) async {
     try {
       if (lat != null && long != null) {
         double latDouble = double.parse(lat);
         double longDouble = double.parse(long);
         LatLng latLng = LatLng(latDouble, longDouble);
 
-        mapController.animateCamera(CameraUpdate.newLatLng(latLng));
+        await mapController.animateCamera(CameraUpdate.newLatLng(latLng));
       }
     } catch (e) {
       print(e);
@@ -87,7 +86,7 @@ class _HomeState extends State<Home> {
                     _moverCamera(sugestao.lat, sugestao.lng);
                   },
                   boxDecoration: const BoxDecoration(
-                    color: Colors.transparent
+                      color: Colors.transparent
                   ),
                   textStyle: const TextStyle(
                     color: Colors.white,
@@ -150,26 +149,7 @@ class _HomeState extends State<Home> {
               const BotaoBottomNavigationBar(titulo: 'Carteira', imagem: 'images/carteira.png'),
               const BotaoBottomNavigationBar(titulo: 'Pagar', imagem: 'images/qr-code.png'),
               const BotaoBottomNavigationBar(titulo: 'Carregar', imagem: 'images/bateria.png'),
-              Column(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Perfil(email: widget.email,)));
-                    },
-                    icon: const Icon(Icons.person),
-                    color: Home.brancoAcizentado,
-                  ),
-                  const Text(
-                    'Perfil',
-                    style: TextStyle(
-                        color: Home.brancoAcizentado,
-                        fontFamily: 'Raleway',
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal
-                    ),
-                  )
-                ],
-              ),
+              BotaoBottomNavigationBar(titulo: 'Perfil', imagem: 'images/user.png', email: widget.email)
             ],
           ),
         ),

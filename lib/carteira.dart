@@ -36,16 +36,16 @@ class Carteira extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.fromLTRB(largura * 0.078, 20, 0, 0),
-                  padding: const EdgeInsets.fromLTRB(39, 30, 39, 29),
+                  padding: EdgeInsets.fromLTRB(largura * 0.083, 30, largura * 0.083, 29),
                   decoration: const BoxDecoration(
                     color: pretoVoltz,
                     borderRadius: BorderRadius.all(Radius.circular(12))
                   ),
-                  child: const Text(
-                    'R\$ 30',
+                  child: Text(
+                    'R\$ 0,00',
                     style: TextStyle(
                       color: azulClaro,
-                      fontSize: 36,
+                      fontSize: largura * 0.073,
                       fontFamily: 'Radio Canada',
                       fontWeight: FontWeight.bold
                     ),
@@ -57,23 +57,23 @@ class Carteira extends StatelessWidget {
                   },
                   child: Container(
                     margin: const EdgeInsets.fromLTRB(14, 20, 0, 0),
-                    padding: const EdgeInsets.fromLTRB(53, 18, 53, 18),
+                    padding: EdgeInsets.fromLTRB(largura * 0.117, 18, largura * 0.117, 18),
                     decoration: const BoxDecoration(
                       color: pretoVoltz,
                       borderRadius: BorderRadius.all(Radius.circular(12))
                     ),
-                    child: const Column(
+                    child: Column(
                       children: [
                         Text(
                           '+',
                           style: TextStyle(
                             color: azulClaro,
-                            fontSize: 36,
+                            fontSize: largura * 0.073,
                             fontFamily: 'Radio Canada',
                             fontWeight: FontWeight.bold
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Adicionar',
                           style: TextStyle(
                             color: Color(0xFF898989),
